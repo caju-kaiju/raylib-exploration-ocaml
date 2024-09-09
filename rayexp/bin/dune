@@ -1,0 +1,14 @@
+(executable
+ (public_name Boxfill)
+ (name boxfill)
+ (libraries raylib unix))
+
+(executable
+ (public_name Boxdrop)
+ (name boxdrop)
+ (libraries raylib unix))
+
+(executable
+ (public_name Boxbounce)
+ (name boxbounce)
+ (libraries raylib unix))
