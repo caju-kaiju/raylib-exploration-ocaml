@@ -12,3 +12,8 @@
  (public_name Boxbounce)
  (name boxbounce)
  (libraries raylib unix))
+
+(executable
+ (public_name Grid)
+ (name grid)
+ (libraries raylib unix))
