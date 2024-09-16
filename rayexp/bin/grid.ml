@@ -1,5 +1,12 @@
 [@@@ocaml.warning "-69-27-32-34-50"]
 
+let random_color () =
+  let r = Raylib.get_random_value 0 255 in
+  let g = Raylib.get_random_value 0 255 in
+  let b = Raylib.get_random_value 0 255 in
+  Raylib.Color.create r g b 255
+;;
+
 module Window = struct
   let width = 1200
   let height = 1200
@@ -20,26 +27,26 @@ module Tile = struct
     ; ypos : int
     }
 
-  let color = Raylib.Color.create 100 100 100 100
   let create xpos ypos size = { size; xpos; ypos }
-  let draw t = Raylib.draw_rectangle t.xpos t.ypos t.size t.size color
+  let draw t = Raylib.draw_rectangle t.xpos t.ypos t.size t.size (random_color ())
 end
 
 module Grid = struct
   type t =
     { htile_count : int
     ; wtile_count : int
-    ; padding : int
-    ; tiles : Tile.t list
+    ; tiles : Tile.t list list
     }
 
-  let draw t = List.iter Tile.draw t.tiles
+  let draw t = t.tiles |> List.flatten |> List.iter Tile.draw
 
   let create height width size =
     let hcount = height / size in
     let wcount = width / size in
-    let tiles : Tile.t list = List.init wcount (fun i -> Tile.create (i * size) 0 size) in
-    { htile_count = hcount; wtile_count = wcount; padding = 0; tiles }
+    let tiles =
+      List.init hcount (fun j -> List.init wcount (fun i -> Tile.create (i * size) (j * size) size))
+    in
+    { htile_count = hcount; wtile_count = wcount; tiles }
   ;;
 end
 
@@ -55,7 +62,7 @@ let rec loop grid =
 ;;
 
 let () =
-  let tile_size = 25 in
+  let tile_size = 10 in
   let grid = Grid.create Window.height Window.width tile_size in
   Window.setup ();
   loop grid
